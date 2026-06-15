@@ -71,13 +71,15 @@ jobs:
         # 'tar' to preserve a symlinks
         # unpack .a archives for windows for versioned .so files
         run: |
+          export BUILDDIR="${{ github.workspace }}/build"
           export DISTDIR="${{ github.workspace }}/dist"
           export STAGEDIR="$DISTDIR/stage"
           mkdir -p "$STAGEDIR"
-          cmake --install "${{ github.workspace }}/build" --prefix "$DISTDIR" --strip
-          find "$DISTDIR/bin" "$DISTDIR/lib" \
-            \( -name 'libchdr.dll' -o -name 'libchdr.so*' -o -name 'libchdr.dylib*' \) \
+          cmake --install "$BUILDDIR" --prefix "$DISTDIR" --strip
+          find "$DISTDIR/lib" \
+            \( -name 'libchdr.so*' -o -name 'libchdr.dylib*' \) \
             \( -type f -o -type l \) -exec cp -P {} "$STAGEDIR/" \; 2>/dev/null || true
+          find "$BUILDDIR" -name 'libchdr.dll' -type f -exec cp {} "$STAGEDIR/" \; 2>/dev/null || true
           (cd "$STAGEDIR" && tar -cf "$DISTDIR/libchdr.tar" libchdr.*)
       - name: Upload artifacts
         uses: actions/upload-artifact@v6
