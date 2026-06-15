@@ -77,8 +77,8 @@ jobs:
           cmake --install "$BUILDDIR" --prefix "$DISTDIR" --strip
           find "$DISTDIR/lib" \
             \( -name 'libchdr.so*' -o -name 'libchdr*.dylib' \) \
-            \( -type f -o -type l \) -exec cp -P {} "$STAGEDIR/" \; 2>/dev/null || true
-          find "$BUILDDIR" -name 'libchdr.dll' -type f -exec cp {} "$STAGEDIR/" \; 2>/dev/null || true
+            \( -type f -o -type l \) -exec cp -P {} "$STAGEDIR/" \;
+          find "$BUILDDIR" -name 'libchdr.dll' -type f -exec cp {} "$STAGEDIR/" \;
           (cd "$STAGEDIR" && tar -cf "$DISTDIR/libchdr.tar" libchdr.*)
       - name: Upload artifacts
         uses: actions/upload-artifact@v6
